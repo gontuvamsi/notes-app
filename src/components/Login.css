@@ -3,13 +3,13 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #EDE9FE, #DDD6FE); 
+  background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
   padding: 20px;
   animation: fadeIn 0.5s ease-in;
 }
 
 .login-form {
-  background: #FFFFFF; 
+  background: #FFFFFF;
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -27,7 +27,7 @@
   margin-bottom: 30px;
   font-size: 2rem;
   font-weight: 600;
-  color: #1E3A8A; 
+  color: #1E3A8A;
 }
 
 .form-group {
@@ -36,41 +36,49 @@
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 1rem;
   font-weight: 500;
-  color: #475569; 
+  color: #475569;
   transition: all 0.3s ease;
+  pointer-events: none;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #C4B5FD; 
+  border: 1px solid #C4B5FD;
   border-radius: 8px;
   font-size: 1rem;
-  background: #F3E8FF; 
+  background: #F3E8FF;
   transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group input:not(:placeholder-shown) {
+  padding-top: 20px;
+  padding-bottom: 4px;
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 0.8rem;
+  color: #8B5CF6;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #8B5CF6; 
+  border-color: #8B5CF6;
   background: #FFFFFF;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
 
-.form-group input:not(:placeholder-shown) + label,
-.form-group input:focus + label {
-  transform: translateY(-25px);
-  font-size: 0.8rem;
-  color: #8B5CF6; 
-}
-
 .login-btn {
   width: 100%;
-  background: #8B5CF6; 
+  background: #8B5CF6;
   color: #FFFFFF;
   border: none;
   padding: 14px;
@@ -82,7 +90,7 @@
 }
 
 .login-btn:hover {
-  background: #7C3AED; 
+  background: #7C3AED;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
@@ -92,11 +100,11 @@
 }
 
 .error {
-  color: #DC2626; 
+  color: #DC2626;
   text-align: center;
   margin-bottom: 20px;
   font-size: 0.9rem;
-  background: #FEF2F2; 
+  background: #FEF2F2;
   padding: 8px;
   border-radius: 5px;
 }
@@ -105,17 +113,17 @@
   text-align: center;
   margin-top: 20px;
   font-size: 0.9rem;
-  color: #475569; 
+  color: #475569;
 }
 
 .register-link a {
-  color: #8B5CF6; 
+  color: #8B5CF6;
   text-decoration: none;
   font-weight: 500;
 }
 
 .register-link a:hover {
-  color: #6D28D9; 
+  color: #6D28D9;
   text-decoration: underline;
 }
 

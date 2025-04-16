@@ -84,12 +84,17 @@ function App() {
   const pinnedNotes = filteredNotes.filter((note) => note.isPinned);
   const unpinnedNotes = filteredNotes.filter((note) => !note.isPinned);
 
+  // Get display name from username
+  const getDisplayName = () => {
+    return currentUser || 'User';
+  };
+
   // Protected Notes component
   const Notes = () => (
     <div className="notes fade-in">
       <header className="notes-header">
         <div className="header-left">
-          <h2 className="greeting">Hi {currentUser}!</h2>
+          <h2 className="greeting">Hi {getDisplayName()}!</h2>
           <h1>Notes App</h1>
         </div>
         <div className="header-actions">
