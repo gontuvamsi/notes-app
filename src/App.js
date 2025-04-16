@@ -92,38 +92,85 @@ function App() {
   };
 
   // Protected Notes component
-  const Notes = () => (
-    <div className="notes fade-in">
-      <header className="notes-header">
-        <div className="header-left">
-          <h2 className="greeting">Hi {getDisplayName()}!</h2>
-          <h1>Notes App</h1>
-        </div>
-        <div className="header-actions">
-          <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder="Search notes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
+  const Notes = () => {
+    const [quote, setQuote] = useState({ content: '', author: '' });
+    const [isFading, setIsFading] = useState(false);
+
+    // Fetch random quote
+    const fetchQuote = async () => {
+      try {
+        const response = await fetch('https://dummyjson.com/quotes');
+        if (!response.ok) throw new Error('Failed to fetch quote');
+        const data = await response.json();
+        const randomIndex = Math.floor(Math.random() * data.quotes.length);
+        setQuote({ content: data.quotes[randomIndex].quote, author: data.quotes[randomIndex].author });
+      } catch (error) {
+        console.error('Error fetching quote:', error);
+        setQuote({
+          content: 'Keep going, you’ve got this!',
+          author: 'Anonymous',
+        });
+      }
+    };
+
+    // Handle quote updates with animation
+    useEffect(() => {
+      const updateQuote = async () => {
+        setIsFading(true);
+        setTimeout(async () => {
+          await fetchQuote();
+          setIsFading(false);
+        }, 500); // Match CSS animation duration
+      };
+
+      // Initial fetch
+      updateQuote();
+
+      // Set interval for subsequent fetches
+      const interval = setInterval(updateQuote, 120000);
+
+      // Cleanup interval
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className="notes fade-in">
+        <header className="notes-header">
+          <div className="header-left">
+            <h2 className="greeting">Hi {getDisplayName()}!</h2>
+            <h1>Notes App</h1>
           </div>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
-        </div>
-      </header>
-      <NoteForm addNote={addNote} />
-      <NoteList
-        pinnedNotes={pinnedNotes}
-        unpinnedNotes={unpinnedNotes}
-        deleteNote={deleteNote}
-        editNote={editNote}
-        togglePin={togglePin}
-      />
-    </div>
-  );
+          <div className="header-actions">
+            <div className="search-wrapper">
+              <input
+                type="text"
+                placeholder="Search notes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
+            </button>
+          </div>
+        </header>
+        {quote.content && (
+          <div className={`quote ${isFading ? 'fade-out' : 'fade-in'}`}>
+            <p>"{quote.content}" - {quote.author}</p>
+          </div>
+        )}
+        <NoteForm addNote={addNote} />
+        <NoteList
+          pinnedNotes={pinnedNotes}
+          unpinnedNotes={unpinnedNotes}
+          deleteNote={deleteNote}
+          editNote={editNote}
+          togglePin={togglePin}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="app fade-in">

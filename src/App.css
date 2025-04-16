@@ -1,117 +1,173 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  .app {
+    min-height: 100vh;
+  }
 
-.app {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #EDE9FE, #DDD6FE); 
-  animation: fadeIn 0.5s ease-in;
-}
+  .notes {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.notes-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(135deg, #EDE9FE, #DDD6FE); 
-  border-radius: 15px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.header-left {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.notes-header h1 {
-  font-size: 2.8rem;
-  font-weight: 700;
-  color: #1E3A8A; 
-}
-
-.greeting {
-  font-size: 1.8rem;
-  font-weight: 500;
-  color: #FF6347; 
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  padding: 12px;
-  font-size: 1rem;
-  border: 1px solid #C4B5FD; 
-  border-radius: 8px;
-  width: 280px;
-  max-width: 100%;
-  background: #F3E8FF; 
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #8B5CF6; 
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
-}
-
-.logout-btn {
-  background: #8B5CF6; 
-  color: #FFFFFF;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background: #7C3AED; 
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.logout-btn:active {
-  transform: translateY(0);
-}
-
-@media (max-width: 768px) {
   .notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .header-left {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
+    gap: 10px;
+  }
+
+  .greeting {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #FF6347;
+  }
+
+  .notes-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin: 0;
   }
 
   .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .search-wrapper {
+    position: relative;
     width: 100%;
-    justify-content: space-between;
+    max-width: 300px;
   }
 
   .search-input {
     width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #C4B5FD;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #F3E8FF;
+    transition: all 0.3s ease;
   }
-}
+
+  .search-input:focus {
+    outline: none;
+    border-color: #8B5CF6;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+
+  .search-input::placeholder {
+    color: #94A3B8;
+  }
+
+  .logout-btn {
+    background: #8B5CF6;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .logout-btn:hover {
+    background: #7C3AED;
+    transform: translateY(-2px);
+  }
+
+  .logout-btn:active {
+    transform: translateY(0);
+  }
+
+  .quote {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #1E3A8A;
+  }
+
+  .quote p {
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .notes-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .header-actions {
+      width: 100%;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .search-wrapper {
+      max-width: none;
+    }
+
+    .logout-btn {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .notes {
+      padding: 10px;
+    }
+
+    .notes-header h1 {
+      font-size: 2rem;
+    }
+
+    .greeting {
+      font-size: 1.3rem;
+    }
+
+    .quote {
+      font-size: 1rem;
+    }
+  }
+
+
+  /* Existing styles remain unchanged, adding new animation styles */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  .fade-out {
+    animation: fadeOut 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
