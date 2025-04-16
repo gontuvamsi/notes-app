@@ -1,84 +1,80 @@
 import React, { useState } from 'react';
 import './NoteCard.css';
 
-const colors = ['#E9D5FF', '#C4B5FD', '#A78BFA', '#D8B4FE', '#F3E8FF'];
-
-function NoteCard({ note, deleteNote, editNote, togglePin, animationDelay }) {
+function NoteCard({ note, deleteNote, editNote, togglePin }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [content, setContent] = useState(note.content);
-  const [color, setColor] = useState(note.color);
+  const [newContent, setNewContent] = useState(note.content);
+  const [newColor, setNewColor] = useState(note.color);
+
+  const colors = ['#E9D5FF', '#C4B5FD', '#A78BFA', '#D8B4FE', '#F3E8FF'];
 
   const handleSave = () => {
-    if (content.trim()) {
-      editNote(note.id, content, color);
+    if (newContent.trim()) {
+      editNote(note.id, newContent, newColor);
       setIsEditing(false);
     }
   };
 
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
   return (
-    <div
-      className="note-card slide-in"
-      style={{
-        backgroundColor: note.color,
-        animationDelay: `${animationDelay}s`,
-      }}
-    >
-      {note.isPinned && <span className="pinned-badge">📌 Pinned</span>}
+    <div className="note-card" style={{ backgroundColor: note.color }}>
       {isEditing ? (
-        <div className="edit-mode">
+        <div className="note-edit">
           <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows="5"
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+            className="edit-textarea"
           />
-          <div className="color-picker">
-            {colors.map((c) => (
+          <div className="color-options">
+            {colors.map((color) => (
               <button
-                key={c}
-                type="button"
-                className={`color-btn ${color === c ? 'selected' : ''}`}
-                style={{ backgroundColor: c }}
-                onClick={() => setColor(c)}
+                key={color}
+                className="color-btn"
+                style={{ backgroundColor: color }}
+                onClick={() => setNewColor(color)}
               />
             ))}
           </div>
           <div className="edit-actions">
-            <button onClick={handleSave} className="save-btn">Save</button>
-            <button
-              onClick={() => setIsEditing(false)}
-              className="cancel-btn"
-            >
-              Cancel
+            <button className="save-btn" onClick={handleSave}>
+              <i className="fas fa-save"></i> Save
+            </button>
+            <button className="cancel-btn" onClick={() => setIsEditing(false)}>
+              <i className="fas fa-times"></i> Cancel
             </button>
           </div>
         </div>
       ) : (
-        <>
-          <p>{note.content}</p>
+        <div className="note-content">
+          {note.isPinned && <span className="pin-badge">Pinned</span>}
+          <pre className="note-text">{note.content}</pre>
+          <div className="note-timestamps">
+            <p>Created: {formatDateTime(note.createdAt)}</p>
+            <p>Updated: {formatDateTime(note.updatedAt)}</p>
+          </div>
           <div className="note-actions">
-            <button
-              onClick={() => togglePin(note.id)}
-              className="pin-btn"
-              title={note.isPinned ? 'Unpin' : 'Pin'}
-            >
-              {note.isPinned ? '📌' : '📍'}
+            <button className="edit-btn" onClick={() => setIsEditing(true)}>
+              <i className="fas fa-pen"></i> Edit
             </button>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="edit-btn"
-              title="Edit"
-            >
-              ✏️
+            <button className="delete-btn" onClick={() => deleteNote(note.id)}>
+              <i className="fas fa-trash"></i> Delete
             </button>
-            <button
-              onClick={() => deleteNote(note.id)}
-              className="delete-btn"
-              title="Delete"
-            >
-              🗑️
+            <button className="pin-btn" onClick={() => togglePin(note.id)}>
+              <i className="fas fa-thumbtack"></i> {note.isPinned ? 'Unpin' : 'Pin'}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

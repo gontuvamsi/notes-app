@@ -32,12 +32,14 @@ function App() {
 
   // Add a new note
   const addNote = (content, color) => {
+    const now = new Date().toISOString();
     const newNote = {
       id: Date.now(),
       content,
       color,
       isPinned: false,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     };
     setNotes([newNote, ...notes]);
   };
@@ -52,7 +54,7 @@ function App() {
     setNotes(
       notes.map((note) =>
         note.id === id
-          ? { ...note, content: newContent, color: newColor }
+          ? { ...note, content: newContent, color: newColor, updatedAt: new Date().toISOString() }
           : note
       )
     );
