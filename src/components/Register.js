@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs';
 import './Register.css';
 
 const Register = ({ setCurrentUser }) => {
@@ -78,9 +77,8 @@ const Register = ({ setCurrentUser }) => {
     if (!isFormValid()) return;
 
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
       const users = JSON.parse(localStorage.getItem('users') || '[]');
-      users.push({ username, email, password: hashedPassword });
+      users.push({ username, email, password: password });
       localStorage.setItem('users', JSON.stringify(users));
       localStorage.setItem('currentUser', username);
       setCurrentUser(username);
