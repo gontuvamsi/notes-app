@@ -1,90 +1,161 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../auth';
+import bcrypt from 'bcryptjs';
 import './Register.css';
 
-function Register({ setCurrentUser }) {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const Register = ({ setCurrentUser }) => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  // Handle input changes and validate in real-time
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setTouched({ ...touched, [name]: true });
+    validateField(name, value);
   };
 
-  const handleSubmit = (e) => {
+  // Validate individual field
+  const validateField = (name, value) => {
+    const newErrors = { ...errors };
+
+    if (name === 'username') {
+      if (!value) newErrors.username = 'Username is required';
+      else if (value.length < 3 || value.length > 20) newErrors.username = 'Username must be 3-20 characters';
+      else delete newErrors.username;
+    }
+
+    if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!value) newErrors.email = 'Email is required';
+      else if (!emailRegex.test(value)) newErrors.email = 'Invalid email format';
+      else {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.some((user) => user.email === value)) newErrors.email = 'Email already exists';
+        else delete newErrors.email;
+      }
+    }
+
+    if (name === 'password') {
+      if (!value) newErrors.password = 'Password is required';
+      else if (value.length < 6) newErrors.password = 'Password must be at least 6 characters';
+      else delete newErrors.password;
+    }
+
+    if (name === 'confirmPassword') {
+      if (!value) newErrors.confirmPassword = 'Confirm password is required';
+      else if (value !== formData.password) newErrors.confirmPassword = 'Passwords do not match';
+      else delete newErrors.confirmPassword;
+    }
+
+    setErrors(newErrors);
+  };
+
+  // Check if form is valid
+  const isFormValid = () => {
+    const { username, email, password, confirmPassword } = formData;
+    const noErrors = Object.keys(errors).length === 0;
+    const allFilled = username && email && password && confirmPassword;
+    return noErrors && allFilled;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    const { username, email, password } = formData;
 
-    if (!username.trim() || !email.trim() || !password.trim()) {
-      setError('All fields are required');
-      return;
-    }
+    // Final validation
+    Object.keys(formData).forEach((key) => validateField(key, formData[key]));
+    setTouched({ username: true, email: true, password: true, confirmPassword: true });
 
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
+    if (!isFormValid()) return;
 
     try {
-      register(username, email, password);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      users.push({ username, email, password: hashedPassword });
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', username);
       setCurrentUser(username);
       navigate('/');
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setErrors({ general: 'Registration failed. Please try again.' });
     }
   };
 
   return (
     <div className="register-container">
       <form className="register-form" onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
-        {error && <div className="error">{error}</div>}
+        <h2>Register</h2>
+        {errors.general && <div className="error">{errors.general}</div>}
+
         <div className="form-group">
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            name="username"
             placeholder=" "
-            id="username"
-            required
+            value={formData.username}
+            onChange={handleChange}
           />
-          <label htmlFor="username">Username</label>
+          <label>Username</label>
+          {touched.username && errors.username && <span className="error">{errors.username}</span>}
         </div>
+
         <div className="form-group">
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
             placeholder=" "
-            id="email"
-            required
+            value={formData.email}
+            onChange={handleChange}
           />
-          <label htmlFor="email">Email</label>
+          <label>Email</label>
+          {touched.email && errors.email && <span className="error">{errors.email}</span>}
         </div>
+
         <div className="form-group">
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
             placeholder=" "
-            id="password"
-            required
+            value={formData.password}
+            onChange={handleChange}
           />
-          <label htmlFor="password">Password</label>
+          <label>Password</label>
+          {touched.password && errors.password && <span className="error">{errors.password}</span>}
         </div>
-        <button type="submit" className="register-btn">
+
+        <div className="form-group">
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder=" "
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          <label>Confirm Password</label>
+          {touched.confirmPassword && errors.confirmPassword && (
+            <span className="error">{errors.confirmPassword}</span>
+          )}
+        </div>
+
+        <button type="submit" className="register-btn" disabled={!isFormValid()}>
           Register
         </button>
+
         <div className="login-link">
           Already have an account? <a href="/login">Login</a>
         </div>
       </form>
     </div>
   );
-}
+};
 
 export default Register;

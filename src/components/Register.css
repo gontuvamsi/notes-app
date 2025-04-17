@@ -58,13 +58,13 @@
 
 .form-group input:focus,
 .form-group input:not(:placeholder-shown) {
-  padding-top: 15px;
+  padding-top: 20px;
   padding-bottom: 4px;
 }
 
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label {
-  top: -16px;
+  top: -8px;
   font-size: 0.8rem;
   color: #8B5CF6;
 }
@@ -74,6 +74,14 @@
   border-color: #8B5CF6;
   background: #FFFFFF;
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.form-group .error {
+  display: block;
+  color: #DC2626;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  text-align: left;
 }
 
 .register-btn {
@@ -89,7 +97,12 @@
   transition: all 0.3s ease;
 }
 
-.register-btn:hover {
+.register-btn:disabled {
+  background: #94A3B8;
+  cursor: not-allowed;
+}
+
+.register-btn:not(:disabled):hover {
   background: #7C3AED;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
