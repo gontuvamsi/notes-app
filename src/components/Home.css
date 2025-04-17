@@ -1,0 +1,90 @@
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #EDE9FE, #DDD6FE);
+    padding: 20px;
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .home-card {
+    background: #FFFFFF;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .home-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .home-card h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin-bottom: 20px;
+  }
+  
+  .home-card p {
+    font-size: 1.2rem;
+    color: #475569;
+    margin-bottom: 30px;
+  }
+  
+  .home-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .home-btn {
+    background: #8B5CF6;
+    color: #FFFFFF;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .home-btn:hover {
+    background: #7C3AED;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+  }
+  
+  .home-btn:active {
+    transform: translateY(0);
+  }
+  
+  @media (max-width: 480px) {
+    .home-card {
+      padding: 20px;
+    }
+  
+    .home-card h1 {
+      font-size: 2rem;
+    }
+  
+    .home-card p {
+      font-size: 1rem;
+    }
+  
+    .home-buttons {
+      flex-direction: column;
+      gap: 15px;
+    }
+  
+    .home-btn {
+      width: 100%;
+    }
+  }

@@ -4,6 +4,7 @@ import NoteForm from './components/NoteForm';
 import NoteList from './components/NoteList';
 import Login from './components/Login';
 import Register from './components/Register';
+import Home from './components/Home';
 import { getCurrentUser, logout } from './auth';
 import './App.css';
 
@@ -85,7 +86,7 @@ function App() {
     logout();
     setCurrentUser(null);
     setNotes([]);
-    navigate('/login');
+    navigate('/home');
   };
 
   // Filter notes based on search query
@@ -167,13 +168,14 @@ function App() {
   return (
     <div className="app fade-in">
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route
           path="/"
           element={
             currentUser ? (
               <Notes />
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to="/home" replace />
             )
           }
         />
