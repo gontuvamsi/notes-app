@@ -64,7 +64,7 @@
 
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label {
-  top: -8px;
+  top: -18px;
   font-size: 0.8rem;
   color: #8B5CF6;
 }
