@@ -24,13 +24,13 @@ export function login(email, password) {
     throw new Error('Email not found');
   }
 
-  const isPasswordValid = false
+ let isPasswordValid = false
   if (password === user.password) {
     isPasswordValid = true
   } else {
     isPasswordValid = false
   }
-  if (isPasswordValid) {
+  if (!isPasswordValid) {
     throw new Error('Invalid password');
   }
 

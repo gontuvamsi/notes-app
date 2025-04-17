@@ -8,12 +8,19 @@ import { getCurrentUser, logout } from './auth';
 import './App.css';
 
 function App() {
-  const [notes, setNotes] = useState([]);
+  const currentUserFromStorage = getCurrentUser();
+  const [notes, setNotes] = useState(() => {
+    // Initialize notes from localStorage on mount
+    if (currentUserFromStorage) {
+      return JSON.parse(localStorage.getItem(`notes_${currentUserFromStorage}`)) || [];
+    }
+    return [];
+  });
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  const [currentUser, setCurrentUser] = useState(currentUserFromStorage);
   const navigate = useNavigate();
 
-  // Load user-specific notes from localStorage
+  // Load user-specific notes from localStorage when currentUser changes
   useEffect(() => {
     if (currentUser) {
       const userNotes = JSON.parse(localStorage.getItem(`notes_${currentUser}`)) || [];
@@ -25,8 +32,12 @@ function App() {
 
   // Save notes to localStorage whenever notes change
   useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem(`notes_${currentUser}`, JSON.stringify(notes));
+    if (currentUser && notes.length > 0) {
+      try {
+        localStorage.setItem(`notes_${currentUser}`, JSON.stringify(notes));
+      } catch (error) {
+        console.error('Error saving notes to localStorage:', error);
+      }
     }
   }, [notes, currentUser]);
 
@@ -94,44 +105,25 @@ function App() {
   // Protected Notes component
   const Notes = () => {
     const [quote, setQuote] = useState({ content: '', author: '' });
-    const [isFading, setIsFading] = useState(false);
 
-    // Fetch random quote
-    const fetchQuote = async () => {
-      try {
-        const response = await fetch('https://dummyjson.com/quotes');
-        if (!response.ok) throw new Error('Failed to fetch quote');
-        const data = await response.json();
-        const randomIndex = Math.floor(Math.random() * data.quotes.length);
-        setQuote({ content: data.quotes[randomIndex].quote, author: data.quotes[randomIndex].author });
-      } catch (error) {
-        console.error('Error fetching quote:', error);
-        setQuote({
-          content: 'Keep going, you’ve got this!',
-          author: 'Anonymous',
-        });
-      }
-    };
-
-    // Handle quote updates with animation
+    // Fetch random quote on mount (every page load/refresh)
     useEffect(() => {
-      const updateQuote = async () => {
-        setIsFading(true);
-        setTimeout(async () => {
-          await fetchQuote();
-          setIsFading(false);
-        }, 500); // Match CSS animation duration
+      const fetchQuote = async () => {
+        try {
+          const response = await fetch('https://api.quotable.io/random');
+          if (!response.ok) throw new Error('Failed to fetch quote');
+          const data = await response.json();
+          setQuote({ content: data.content, author: data.author });
+        } catch (error) {
+          console.error('Error fetching quote:', error);
+          setQuote({
+            content: 'Keep going, you’ve got this!',
+            author: 'Anonymous',
+          });
+        }
       };
-
-      // Initial fetch
-      updateQuote();
-
-      // Set interval for subsequent fetches
-      const interval = setInterval(updateQuote, 120000);
-
-      // Cleanup interval
-      return () => clearInterval(interval);
-    }, []);
+      fetchQuote();
+    }, []); // Empty dependency array ensures fetch on every mount
 
     return (
       <div className="notes fade-in">
@@ -156,8 +148,8 @@ function App() {
           </div>
         </header>
         {quote.content && (
-          <div className={`quote ${isFading ? 'fade-out' : 'fade-in'}`}>
-            <p>"{quote.content}" - {quote.author}</p>
+          <div className="quote">
+            <p>"{quote.content}" – {quote.author}</p>
           </div>
         )}
         <NoteForm addNote={addNote} />
